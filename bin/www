@@ -7,8 +7,7 @@
 import app from "../app.js";
 // import debug from '("debug")("ino:server")';
 import http from "http";
-import WebSocket from "ws";
-
+import { Server } from "socket.io";
 /**
  * Get port from environment and store in Express.
  */
@@ -20,23 +19,30 @@ app.set("port", port);
  * Create HTTP server.
  */
 
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server: server });
+const httpServer = http.createServer(app);
 
-wss.on("connection", (ws, req) => {
-  console.log("client connected from", req.socket.remoteAddress);
-  ws.send("Welcome mofo");
-  ws.on("message", (data) => ws.send(`echo: ${data}`));
-  ws.on("close", () => console.log("client disconnected"));
+/**
+ * Create WebSocket server.
+ */
+
+const io = new Server(httpServer);
+/**
+ * Listen for new connections to .
+ */
+
+io.on("connection", (socket) => {
+  socket.on("newConnection", (arg) => {
+    console.log(arg);
+  });
 });
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
-server.on("error", onError);
-server.on("listening", onListening);
+httpServer.listen(port);
+httpServer.on("error", onError);
+httpServer.on("listening", onListening);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -89,7 +95,7 @@ function onError(error) {
  */
 
 function onListening() {
-  var addr = server.address();
+  var addr = httpServer.address();
   var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
   // debug("Listening on " + bind);
 }

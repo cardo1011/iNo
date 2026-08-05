@@ -3,6 +3,13 @@
   <head>
     <title><%= title %></title>
     <link rel="stylesheet" href="/stylesheets/style.css" />
+    <script defer type="module">
+      import { io } from "https://cdn.socket.io/4.8.3/socket.io.esm.min.js";
+
+      const socket = io();
+
+      socket.emit("newConnection", "=====\nnew player connected!\n=====");
+    </script>
   </head>
   <body>
     <h1><%= title %></h1>
