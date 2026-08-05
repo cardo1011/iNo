@@ -8,7 +8,13 @@
 
       const socket = io();
 
-      socket.emit("newConnection", "=====\nnew player connected!\n=====");
+      socket.emit("newConnection");
+      setTimeout(() => console.log("Socket Connected: " + socket.id), 1500);
+
+      setTimeout(() => {
+        console.log("disconnected Socket:" + socket.id);
+        socket.disconnect();
+      }, 2500);
     </script>
   </head>
   <body>

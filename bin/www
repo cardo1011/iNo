@@ -30,9 +30,16 @@ const io = new Server(httpServer);
  * Listen for new connections to .
  */
 
+// io.on("connection", (socket) => {
+//   socket.on("newConnection", (arg) => {
+//     console.log(arg);
+//   });
+// });
+let playerCount = 0;
 io.on("connection", (socket) => {
-  socket.on("newConnection", (arg) => {
-    console.log(arg);
+  socket.on("newConnection", () => {
+    playerCount++;
+    console.log(`=======\nPlayer_${playerCount} connected to server\n=======`);
   });
 });
 
