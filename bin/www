@@ -5,48 +5,26 @@
  */
 
 import app from "../app.js";
+import newPlayerConnected from "../sockets/newConnections.js";
+import { httpServer } from "../servers.js";
 // import debug from '("debug")("ino:server")';
-import http from "http";
-import { Server } from "socket.io";
+// import http from "http";
+// import { Server } from "socket.io";
+
 /**
  * Get port from environment and store in Express.
  */
-
 var port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
 /**
- * Create HTTP server.
+ * Listen for new connections to a socket.
  */
-
-const httpServer = http.createServer(app);
-
-/**
- * Create WebSocket server.
- */
-
-const io = new Server(httpServer);
-/**
- * Listen for new connections to .
- */
-
-// io.on("connection", (socket) => {
-//   socket.on("newConnection", (arg) => {
-//     console.log(arg);
-//   });
-// });
-let playerCount = 0;
-io.on("connection", (socket) => {
-  socket.on("newConnection", () => {
-    playerCount++;
-    console.log(`=======\nPlayer_${playerCount} connected to server\n=======`);
-  });
-});
+newPlayerConnected();
 
 /**
  * Listen on provided port, on all network interfaces.
  */
-
 httpServer.listen(port);
 httpServer.on("error", onError);
 httpServer.on("listening", onListening);

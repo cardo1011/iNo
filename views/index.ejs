@@ -9,12 +9,22 @@
       const socket = io();
 
       socket.emit("newConnection");
-      setTimeout(() => console.log("Socket Connected: " + socket.id), 1500);
 
       setTimeout(() => {
-        console.log("disconnected Socket:" + socket.id);
-        socket.disconnect();
-      }, 2500);
+        console.log("Socket Connected: " + socket.id);
+
+        //Create button to invite friend to a room if there is an active socket.
+        if (socket.active) {
+          const bdy = document.getElementsByTagName("body")[0];
+          const div = document.createElement("div");
+          const joinBtn = document.createElement("button");
+
+          joinBtn.append("Invite Friend");
+          joinBtn.append;
+          div.append(joinBtn);
+          bdy.append(div);
+        }
+      }, 1500);
     </script>
   </head>
   <body>

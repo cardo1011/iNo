@@ -4,7 +4,6 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
-
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
 
