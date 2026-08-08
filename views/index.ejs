@@ -6,25 +6,44 @@
     <script defer type="module">
       import { io } from "https://cdn.socket.io/4.8.3/socket.io.esm.min.js";
 
-      const socket = io();
+      function connectSocket() {
+        return new Promise((resolve, reject) => {
+          const socket = io();
+          setTimeout(() => {
+            if (socket.connected) {
+              socket.emit("newConnection");
+              resolve(socket);
+            } else {
+              reject("Could not connect to socket");
+            }
+          }, 125);
+        });
+      }
 
-      socket.emit("newConnection");
+      async function waitForSocket() {
+        console.log("waiting for socket to connect...");
 
-      setTimeout(() => {
-        console.log("Socket Connected: " + socket.id);
+        try {
+          const socket = await connectSocket();
+          console.log("Socket connect: " + socket.id);
 
-        //Create button to invite friend to a room if there is an active socket.
-        if (socket.active) {
-          const bdy = document.getElementsByTagName("body")[0];
-          const div = document.createElement("div");
-          const joinBtn = document.createElement("button");
+          //Create button to invite friend to a room if there is an active socket.
+          if (socket.active) {
+            const bdy = document.getElementsByTagName("body")[0];
+            const div = document.createElement("div");
+            const joinBtn = document.createElement("button");
 
-          joinBtn.append("Invite Friend");
-          joinBtn.append;
-          div.append(joinBtn);
-          bdy.append(div);
+            joinBtn.append("Invite Friend");
+            joinBtn.append;
+            div.append(joinBtn);
+            bdy.append(div);
+          }
+        } catch (err) {
+          console.error(err);
         }
-      }, 1500);
+      }
+
+      waitForSocket();
     </script>
   </head>
   <body>
