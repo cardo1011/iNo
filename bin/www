@@ -5,7 +5,7 @@
  */
 
 import app from "../app.js";
-import newPlayerConnected from "../sockets/newConnections.js";
+import socketHandlers from "../sockets/newConnections.js";
 import { httpServer } from "../servers.js";
 // import debug from '("debug")("ino:server")';
 // import http from "http";
@@ -20,7 +20,8 @@ app.set("port", port);
 /**
  * Listen for new connections to a socket.
  */
-newPlayerConnected();
+// newPlayerConnected();
+socketHandlers();
 
 /**
  * Listen on provided port, on all network interfaces.

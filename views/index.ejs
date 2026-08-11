@@ -6,6 +6,53 @@
     <script defer type="module">
       import { io } from "https://cdn.socket.io/4.8.3/socket.io.esm.min.js";
 
+      const bdy = document.getElementsByTagName("body")[0];
+
+      function displayMessage(roomCode) {
+        const div = document.createElement("div");
+        div.textContent = `Send this to your friend so they can join the game: ${roomCode}`;
+
+        bdy.append(div);
+      }
+
+      function renderInviteFriendBtn(sock) {
+        const div = document.createElement("div");
+        const inviteBtn = document.createElement("button");
+
+        inviteBtn.append("Invite Friend");
+
+        inviteBtn.addEventListener("click", () => {
+          sock.emit("inviteFriend", sock.id);
+          console.log(`sock id sent to server: ${sock.id}`);
+
+          sock.on("sendRoom", (roomCode) => displayMessage(roomCode));
+        });
+        div.append(inviteBtn);
+        bdy.append(div);
+      }
+
+      function renderJoinFriendBtn() {
+        const div = document.createElement("div");
+        const joinFriendBtn = document.createElement("button");
+
+        joinFriendBtn.append("Join Friend");
+
+        //Renders text input box for player to input the room code sent by their friend.
+        joinFriendBtn.addEventListener("click", () => {
+          const form = document.createElement("form");
+          const input = document.createElement("input");
+          const joinGameBtn = document.createElement("button");
+
+          input.placeholder = "Enter game code...";
+          joinGameBtn.append("Join");
+
+          form.append(input, joinGameBtn);
+          bdy.append(form);
+        });
+        div.append(joinFriendBtn);
+        bdy.append(div);
+      }
+
       function connectToSocket() {
         return new Promise((resolve, reject) => {
           const socket = io();
@@ -18,7 +65,7 @@
           socket.on("connect_error", (error) => {
             console.log(error);
             if (!socket.active) {
-              reject("Could not connect to socket");
+              reject(new Error("Could not connect to socket"));
             }
           });
         });
@@ -29,25 +76,17 @@
           const socket = await connectToSocket();
           console.log(socket);
 
-          //Create button to invite friend to a room if there is an active socket.
+          //Create button to invite friend to a room or join room if there is an active socket.
           if (socket.active) {
             console.log("Socket connect: " + socket.id);
-
-            const bdy = document.getElementsByTagName("body")[0];
-            const div = document.createElement("div");
-            const joinBtn = document.createElement("button");
-
-            joinBtn.append("Invite Friend");
-            joinBtn.append;
-            div.append(joinBtn);
-            bdy.append(div);
+            renderInviteFriendBtn(socket);
+            renderJoinFriendBtn();
           }
         } catch (err) {
           console.error(err);
         }
       }
 
-      // connectToSocket().then(checkSocketConnection);
       checkSocketConnection();
     </script>
   </head>
