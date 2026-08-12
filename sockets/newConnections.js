@@ -19,6 +19,11 @@ function socketHandlers() {
       io.emit("sendRoom", room);
       console.log(`Room code sent back to client: ${room}`);
     });
+
+    socket.on("joinFriend", (room) => {
+      socket.join(room);
+      console.log(`Friend has joined room: ${room}`);
+    });
   });
 }
 export default socketHandlers;
