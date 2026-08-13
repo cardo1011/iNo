@@ -14,15 +14,19 @@ function socketHandlers() {
     // Connects player to room in order to initialize the game and provides them their socket ID to have their friend join the same room.
     socket.on("inviteFriend", (room) => {
       socket.join(room);
-      console.log(`Player joined room: ${room}`);
-
-      io.emit("sendRoom", room);
-      console.log(`Room code sent back to client: ${room}`);
+      socket.emit("sendRoom", room);
     });
 
+    // Connects second player to
     socket.on("joinFriend", (room) => {
-      socket.join(room);
-      console.log(`Friend has joined room: ${room}`);
+      // Accessing the rooms Map provided by socket.io
+      const rooms = io.of("/").adapter.rooms;
+
+      // Verify the room provided by the players exists before allowing them to join the game
+      if (rooms.includes(room)) {
+        socket.join(room);
+        io.to(room).emit("showAlert", `Your opponent has joined the game`);
+      }
     });
   });
 }

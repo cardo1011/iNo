@@ -51,8 +51,8 @@
           // On submit, will send the room code found in the text box to the server to have the player join the same room as their friend.
           form.addEventListener("submit", (event) => {
             event.preventDefault();
-            const inputVal = input.value;
-            sock.emit("joinFriend", inputVal);
+            const roomCode = input.value;
+            sock.emit("joinFriend", roomCode);
           });
 
           form.append(input, joinGameBtn);
@@ -90,6 +90,11 @@
             console.log("Socket connect: " + socket.id);
             renderInviteFriendBtn(socket);
             renderJoinFriendBtn(socket);
+
+            //Alerts both players once the 2nd player has joined.
+            socket.on("showAlert", (message) => {
+              alert(message);
+            });
           }
         } catch (err) {
           console.error(err);
