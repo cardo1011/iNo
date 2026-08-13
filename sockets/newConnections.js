@@ -23,7 +23,7 @@ function socketHandlers() {
       const rooms = io.of("/").adapter.rooms;
 
       // Verify the room provided by the players exists before allowing them to join the game
-      if (rooms.includes(room)) {
+      if (rooms.has(room)) {
         socket.join(room);
         io.to(room).emit("showAlert", `Your opponent has joined the game`);
       }
