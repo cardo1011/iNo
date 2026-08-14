@@ -1,0 +1,3 @@
+/* 
+ This file should contain the code necessary to fetch trivia questions from an external API and process them in order for them to be ready to actually be used in game.
+*/

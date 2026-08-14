@@ -5,11 +5,8 @@
  */
 
 import app from "../app.js";
-import socketHandlers from "../sockets/newConnections.js";
+import socketHandlers from "../sockets/socketHandlers.js";
 import { httpServer } from "../servers.js";
-// import debug from '("debug")("ino:server")';
-// import http from "http";
-// import { Server } from "socket.io";
 
 /**
  * Get port from environment and store in Express.
