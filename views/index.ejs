@@ -95,6 +95,22 @@
             socket.on("showAlert", (message) => {
               alert(message);
             });
+
+            socket.on("renderQuestions", (arr) => {
+              console.log("questions array: ", arr);
+              let qDiv = document.createElement("div");
+              let questionUl = document.createElement("ul");
+              qDiv.append(questionUl);
+
+              arr.forEach((questionObj) => {
+                let questionLi = document.createElement("li");
+                questionLi.append(questionObj.question);
+
+                questionUl.append(questionLi);
+              });
+
+              bdy.append(qDiv);
+            });
           }
         } catch (err) {
           console.error(err);

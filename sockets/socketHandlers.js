@@ -1,8 +1,13 @@
 import { io } from "../servers.js";
+import fetchQuestions from "../services/triviaService.js";
 
 let playerCount = 0;
 // Accessing the rooms Map provided by socket.io
 const rooms = io.of("/").adapter.rooms;
+
+async function resolveQuestions(room) {
+  const questionsArr = await fetchQuestions();
+}
 
 function socketHandlers() {
   io.on("connection", (socket) => {
@@ -19,12 +24,16 @@ function socketHandlers() {
       socket.emit("sendRoom", room);
     });
 
-    // Connects second player to
-    socket.on("joinFriend", (room) => {
+    // Connects second player to same room as their friend
+    socket.on("joinFriend", async (room) => {
       // Verify the room provided by the players exists before allowing them to join the game
       if (rooms.has(room)) {
         socket.join(room);
         io.to(room).emit("showAlert", `Your opponent has joined the game`);
+
+        // waits for the array of question objects before sending it over to the front end
+        let questionsArr = await fetchQuestions();
+        io.to(room).emit("renderQuestions", questionsArr);
       }
     });
   });
