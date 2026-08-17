@@ -96,19 +96,17 @@
               alert(message);
             });
 
+            // Temp rendering of questions until i use React to display the frontend.
             socket.on("renderQuestions", (arr) => {
-              console.log("questions array: ", arr);
+              arr.forEach((questionObj) => {
+                let liNode = document.createElement("li");
+                liNode.textContent = questionObj.question;
+                questionUl.append(liNode);
+              });
+
               let qDiv = document.createElement("div");
               let questionUl = document.createElement("ul");
               qDiv.append(questionUl);
-
-              arr.forEach((questionObj) => {
-                let questionLi = document.createElement("li");
-                questionLi.append(questionObj.question);
-
-                questionUl.append(questionLi);
-              });
-
               bdy.append(qDiv);
             });
           }

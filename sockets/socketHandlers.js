@@ -5,10 +5,6 @@ let playerCount = 0;
 // Accessing the rooms Map provided by socket.io
 const rooms = io.of("/").adapter.rooms;
 
-async function resolveQuestions(room) {
-  const questionsArr = await fetchQuestions();
-}
-
 function socketHandlers() {
   io.on("connection", (socket) => {
     //Acknowledge player has came online.
