@@ -98,14 +98,15 @@
 
             // Temp rendering of questions until i use React to display the frontend.
             socket.on("renderQuestions", (arr) => {
+              let qDiv = document.createElement("div");
+              let questionUl = document.createElement("ul");
+
               arr.forEach((questionObj) => {
                 let liNode = document.createElement("li");
                 liNode.textContent = questionObj.question;
                 questionUl.append(liNode);
               });
 
-              let qDiv = document.createElement("div");
-              let questionUl = document.createElement("ul");
               qDiv.append(questionUl);
               bdy.append(qDiv);
             });
