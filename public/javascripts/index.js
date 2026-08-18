@@ -1,0 +1,113 @@
+import { io } from "https://cdn.socket.io/4.8.3/socket.io.esm.min.js";
+
+const bdy = document.getElementsByTagName("body")[0];
+
+function displayMessage(roomCode) {
+  const div = document.createElement("div");
+  div.textContent = `Send this to your friend so they can join the game: ${roomCode}`;
+
+  bdy.append(div);
+}
+
+function renderInviteFriendBtn(sock) {
+  const div = document.createElement("div");
+  const inviteBtn = document.createElement("button");
+
+  inviteBtn.append("Invite Friend");
+
+  inviteBtn.addEventListener("click", () => {
+    sock.emit("inviteFriend", sock.id);
+    console.log(`sock id sent to server: ${sock.id}`);
+
+    sock.on("sendRoom", (roomCode) => displayMessage(roomCode));
+  });
+  div.append(inviteBtn);
+  bdy.append(div);
+}
+
+function renderJoinFriendBtn(sock) {
+  const div = document.createElement("div");
+  const joinFriendBtn = document.createElement("button");
+
+  joinFriendBtn.append("Join Friend");
+
+  //Renders text input box for player to input the room code sent by their friend.
+  joinFriendBtn.addEventListener("click", () => {
+    const form = document.createElement("form");
+    const input = document.createElement("input");
+    const joinGameBtn = document.createElement("button");
+
+    joinGameBtn.append("Join");
+
+    input.id = "room-code";
+    input.placeholder = "Enter game code...";
+
+    // On submit, will send the room code found in the text box to the server to have the player join the same room as their friend.
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const roomCode = input.value;
+      sock.emit("joinFriend", roomCode);
+    });
+
+    form.append(input, joinGameBtn);
+    bdy.append(form);
+  });
+  div.append(joinFriendBtn);
+  bdy.append(div);
+}
+
+function connectToSocket() {
+  return new Promise((resolve, reject) => {
+    const socket = io();
+
+    socket.on("connect", () => {
+      socket.emit("newConnection");
+      resolve(socket);
+    });
+
+    socket.on("connect_error", (error) => {
+      console.log(error);
+      if (!socket.active) {
+        reject(new Error("Could not connect to socket"));
+      }
+    });
+  });
+}
+
+async function checkSocketConnection() {
+  try {
+    const socket = await connectToSocket();
+    console.log(socket);
+
+    //Create button to invite friend to a room or join room if there is an active socket.
+    if (socket.active) {
+      console.log("Socket connect: " + socket.id);
+      renderInviteFriendBtn(socket);
+      renderJoinFriendBtn(socket);
+
+      //Alerts both players once the 2nd player has joined.
+      socket.on("showAlert", (message) => {
+        alert(message);
+      });
+
+      // Temp rendering of questions until i use React to display the frontend.
+      socket.on("renderQuestions", (arr) => {
+        let qDiv = document.createElement("div");
+        let questionUl = document.createElement("ul");
+
+        arr.forEach((questionObj) => {
+          let liNode = document.createElement("li");
+          liNode.textContent = questionObj.question;
+          questionUl.append(liNode);
+        });
+
+        qDiv.append(questionUl);
+        bdy.append(qDiv);
+      });
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+checkSocketConnection();
