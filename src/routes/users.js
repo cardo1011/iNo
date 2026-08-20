@@ -1,0 +1,14 @@
+import express from "express";
+const router = express.Router();
+
+/* GET users listing. */
+router.get("/", function (req, res, next) {
+  res.send("respond with a resource");
+});
+
+/* testing knowledge */
+// router.get("/cool", function (req, res, next) {
+//   res.send("You're so cool");
+// });
+
+export default router;
