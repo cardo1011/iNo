@@ -2,16 +2,22 @@
  This file should contain the code necessary to fetch trivia questions from an external API and process them in order for them to be ready to actually be used in game.
 */
 
-async function fetchToken() {
+interface TokenResponseBody {
+  response_code: number;
+  response_message: string;
+  token: string;
+}
+
+async function fetchToken(): Promise<string> {
   // Need to consider when a session token will NOT return succesfully
 
-  let tokenRes = await fetch(
+  const tokenRes = await fetch(
     "https://opentdb.com/api_token.php?command=request"
   );
-  let tokenResBody = await tokenRes.json();
 
-  // console.log(tokenResBody);
-  return tokenResBody.token;
+  const tokenData = (await tokenRes.json()) as TokenResponseBody;
+
+  return tokenData.token;
 }
 
 async function fetchQuestions() {

@@ -1,5 +1,5 @@
 import { io } from "../servers.js";
-import fetchQuestions from "../services/triviaService.js";
+import fetchQuestions from "../services/triviaService.ts";
 
 function acknowledgePlayerConnectingToServer(playerCount, sock) {
   //Acknowledge player has came online.
